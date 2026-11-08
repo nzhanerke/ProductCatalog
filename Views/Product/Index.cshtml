@@ -1,0 +1,34 @@
+@model List<Product>
+@{
+    ViewData["Title"] = ViewBag.Title;
+    var categories = ViewBag.Categories as List<string> ?? new List<string>();
+    string selected = ViewBag.SelectedCategory as string ?? "Барлығы";
+}
+<section class="hero mb-5">
+    <div class="eyebrow mb-3">ТЕХНОЛОГИЯЛАР КАТАЛОГЫ</div>
+    <h1 class="display-5 fw-bold mb-3">@ViewBag.Title<span class="accent-dot">.</span></h1>
+    <p class="lead mb-0">@ViewData["Subtitle"]</p>
+</section>
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div class="d-flex flex-wrap gap-2">
+        <a class="filter-chip @(selected == "Барлығы" ? "active" : "")" asp-action="Index">Барлығы</a>
+        @foreach (var category in categories)
+        {
+            <a class="filter-chip @(selected == category ? "active" : "")" asp-action="Index" asp-route-category="@category">@category</a>
+        }
+    </div>
+    <span class="small text-muted">@Model.Count тауар табылды</span>
+</div>
+@if (Model.Count == 0)
+{
+    <div class="alert alert-light border">Бұл категорияда тауар табылмады. <a asp-action="Index">Барлығын көру</a></div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+        @foreach (var product in Model)
+        {
+            <div class="col"><partial name="_ProductCard" model="product" /></div>
+        }
+    </div>
+}
